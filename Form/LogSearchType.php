@@ -8,9 +8,10 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\OptionsResolver\Options;
-
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 
 /**
  * @author Jeremy Barthe <j.barthe@lexik.fr>
@@ -31,25 +32,25 @@ class LogSearchType extends AbstractType
                 'required'    => false,
             ))
             ->add('date_from', 'datetime', array(
-                'date_widget' => 'single_text',
-                'date_format' => 'MM/dd/yyyy',
-                'time_widget' => 'text',
+                'widget' => 'single_text',
+                'format' => 'd.M.y H:m:s',
+                'date_format' => 'd.M.y H:m:s',
                 'required'    => false,
             ))
             ->add('date_to', 'datetime', array(
-                'date_widget' => 'single_text',
-                'date_format' => 'MM/dd/yyyy',
-                'time_widget' => 'text',
+                'widget' => 'single_text',
+                'format' => 'd.M.y H:m:s',
+                'date_format' => 'd.M.y H:m:s',
                 'required'    => false,
             ))
-        ;
-
+        ;       
+        
         $qb = $options['query_builder'];
         $convertDateToDatabaseValue = function(\DateTime $date) use ($qb) {
             return Type::getType('datetime')->convertToDatabaseValue($date, $qb->getConnection()->getDatabasePlatform());
         };
 
-        $builder->addEventListener(FormEvents::POST_BIND, function(FormEvent $event) use ($qb, $convertDateToDatabaseValue) {
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) use ($qb, $convertDateToDatabaseValue) {
             $data = $event->getData();
 
             if (null !== $data['term']) {
@@ -64,22 +65,19 @@ class LogSearchType extends AbstractType
                    ->setParameter('level', $data['level']);
             }
 
-            if ($data['date_from'] instanceof \DateTime) {
+            if (isset($data['date_from']) && $data['date_from'] instanceof \DateTime) {
                 $qb->andWhere('l.datetime >= :date_from')
                    ->setParameter('date_from', $convertDateToDatabaseValue($data['date_from']));
             }
 
-            if ($data['date_to'] instanceof \DateTime) {
+            if (isset($data['date_to']) && $data['date_to'] instanceof \DateTime) {
                 $qb->andWhere('l.datetime <= :date_to')
                    ->setParameter('date_to', $convertDateToDatabaseValue($data['date_to']));
             }
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setRequired(array(
@@ -89,10 +87,8 @@ class LogSearchType extends AbstractType
                 'log_levels'      => array(),
                 'csrf_protection' => false,
             ))
-            ->setAllowedTypes(array(
-                'log_levels'    => 'array',
-                'query_builder' => '\Doctrine\DBAL\Query\QueryBuilder',
-            ))
+            ->addAllowedTypes('log_levels','array')
+            ->addAllowedTypes('query_builder','\Doctrine\DBAL\Query\QueryBuilder')
         ;
     }
 
