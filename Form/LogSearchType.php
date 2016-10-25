@@ -8,10 +8,8 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Form\Extension\Core\Type\SearchType;
 
 /**
  * @author Jeremy Barthe <j.barthe@lexik.fr>
@@ -75,9 +73,12 @@ class LogSearchType extends AbstractType
                    ->setParameter('date_to', $convertDateToDatabaseValue($data['date_to']));
             }
         });
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
+    }     
+ 
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver
             ->setRequired(array(
