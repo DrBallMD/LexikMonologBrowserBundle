@@ -1,5 +1,5 @@
 $(function() {
     $('.datepicker').datetimepicker({
-        format: moment().format('DD.MM.YYYY H:m:s')
+        format: 'DD.MM.YYYY HH:mm:ss'
     });
 });

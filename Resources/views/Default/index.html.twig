@@ -6,39 +6,48 @@
 
 {% block monolog_browser_content %}
     {% if filter %}
-        <form method="get" class="monolog-browser-filters">
-            <div class="row">
-                <div class="span3 filter-term">
+        <form method="get" class="form-horizontal monolog-browser-filters">
+                <div class="form-group filter-term">
                     {{ form_label(filter.term, 'log.search.term' | trans) }}
+                    <div class="col-md-3">
                     {{ form_widget(filter.term) }}
                     {{ form_errors(filter.term) }}
+                    </div>
                 </div>
-                <div class="span3 filter-level">
+                <div class="form-group filter-level">
                     {{ form_label(filter.level, 'log.search.level' | trans) }}
+                    <div class="col-md-3">
                     {{ form_widget(filter.level) }}
                     {{ form_errors(filter.level) }}
+                    </div>
                 </div>
-                <div class="span5 filter-daterange">
-                    <div class="filter-datefrom">
+                    <div class="form-group filter-datefrom">
                         {{ form_label(filter.date_from, 'log.search.date_from' | trans) }}
-                        {{ form_widget(filter.date_from.date, { 'attr': { 'class': 'datepicker' } }) }}
-                        {{ form_widget(filter.date_from.time.hour, { 'attr': { 'class': 'hour' } }) }} : {{ form_widget(filter.date_from.time.minute, { 'attr': { 'class': 'minute' } }) }}
+                        <div class="col-md-5">
+                        <div class="form-inline">
+                        {{ form_widget(filter.date_from, { 'attr': { 'class': 'datepicker' } }) }}
                         {{ form_errors(filter.date_from) }}
+                        </div>
+                        </div>
                     </div>
 
-                    <div class="filter-dateto">
+                    <div class="form-group filter-dateto">
                         {{ form_label(filter.date_to, 'log.search.date_to' | trans) }}
-                        {{ form_widget(filter.date_to.date, { 'attr': { 'class': 'datepicker' } }) }}
-                        {{ form_widget(filter.date_to.time.hour, { 'attr': { 'class': 'hour' } }) }} : {{ form_widget(filter.date_to.time.minute, { 'attr': { 'class': 'minute' } }) }}
+                        <div class="col-md-5">
+                        <div class="form-inline">
+                        {{ form_widget(filter.date_to, { 'attr': { 'class': 'datepicker' } }) }}
                         {{ form_errors(filter.date_to) }}
+                        </div>
+                        </div>
+                    </div>
+                <!--</div>-->
+                <div class="form-group filter-submit">
+                    <div class="col-md-5">
+                    <button type="submit" class="btn btn-primary pull-left">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
                     </div>
                 </div>
-                <div class="span1 filter-submit">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="icon-search icon-white"></i>
-                    </button>
-                </div>
-            </div>
         </form>
     {% endif %}
 
