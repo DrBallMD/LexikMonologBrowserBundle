@@ -8,9 +8,9 @@
     {% elseif level == constant('Monolog\\Logger::WARNING') %}
         {% set level_class = 'label-warning' %}
     {% elseif level == constant('Monolog\\Logger::ERROR') %}
-        {% set level_class = 'label-warning' %}
+        {% set level_class = 'label-danger' %}
     {% else %}
-        {% set level_class = 'label-important' %}
+        {% set level_class = 'label-default' %}
     {% endif %}
 
     {% set attr = (attr|default({}))|merge({ 'class': (attr.class|default('') ~ ' label ' ~ level_class)|trim}) %}

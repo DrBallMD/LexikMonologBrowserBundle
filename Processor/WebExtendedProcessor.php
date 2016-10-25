@@ -40,6 +40,9 @@ class WebExtendedProcessor
         // skip processing if for some reason request data
         // is not present (CLI or wonky SAPIs)
         if (!isset($this->serverData['REQUEST_URI'])) {
+            $record['http_server'] = array();
+            $record['http_post']   = array();
+            $record['http_get']    = array();
             return $record;
         }
 
